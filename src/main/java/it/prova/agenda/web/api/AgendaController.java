@@ -54,11 +54,11 @@ public class AgendaController {
 	public AgendaDTO createNew(@Valid @RequestBody AgendaDTO agendaInput) {
 		// se mi viene inviato un id jpa lo interpreta come update ed a me (producer)
 		// non sta bene
-		if (agendaInput.getId() != null)
-			throw new IdNotNullForInsertException("Non è ammesso fornire un id per la creazione");
-
-		Agenda agendaInserito = agendaService.inserisciNuovo(agendaInput.buildAgendaModel());
-		return AgendaDTO.buildAgendaDTOFromModel(agendaInserito);
+		if(agendaInput.getId() != null)
+			throw new AgendaNotFoundException("id non nullo impossibile inserire un nuovo record");
+		
+		Agenda result = agendaService.inserisciNuovo(agendaInput.buildAgendaModel());
+		return AgendaDTO.buildAgendaDTOFromModel(result);
 	}
 	
 	@PutMapping

@@ -9,11 +9,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import it.prova.agenda.model.Agenda;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AgendaDTO {
 
 	private Long id;
