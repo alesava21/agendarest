@@ -130,6 +130,15 @@ public class Utente {
 		this.ruoli = ruoli;
 	}
 
+	public Utente(String username, String password, String nome, String cognome, Date dateCreated) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dateCreated = dateCreated;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -209,7 +218,7 @@ public class Utente {
 	public void setRuoli(Set<Ruolo> ruoli) {
 		this.ruoli = ruoli;
 	}
-	
+
 	public boolean isAttivo() {
 		return this.stato != null && this.stato.equals(StatoUtente.ATTIVO);
 	}
