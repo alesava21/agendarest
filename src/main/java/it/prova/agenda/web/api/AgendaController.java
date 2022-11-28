@@ -66,7 +66,7 @@ public class AgendaController {
 	public void aggiorna(@Valid @RequestBody AgendaDTO agenda) {
 		
 		if(agenda.getId() == null)
-			throw new AgendaNotFoundException("Per poter modificare un'agenda devi specificarne l'id!");
+			throw new AgendaNotFoundException("Specifica l'id");
 		
 		agendaService.aggiorna(agenda.buildAgendaModel());
 	}
