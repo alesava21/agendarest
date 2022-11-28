@@ -23,7 +23,7 @@ public class Agenda {
 
 	@Column(name = "descrizione")
 	private String descrizione;
-	
+
 	@Column(name = "dataOraInizio")
 	private LocalDateTime dataOraInizio;
 
@@ -33,8 +33,17 @@ public class Agenda {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "utente_id", nullable = false)
 	private Utente utente;
-	
-	public Agenda() {}
+
+	public Agenda() {
+	}
+
+	public Agenda(String descrizione, LocalDateTime dataOraInizio, LocalDateTime dataOraFine, Utente utente) {
+		super();
+		this.descrizione = descrizione;
+		this.dataOraInizio = dataOraInizio;
+		this.dataOraFine = dataOraFine;
+		this.utente = utente;
+	}
 
 	public Agenda(Long id, String descrizione, LocalDateTime dataOraInizio, LocalDateTime dataOraFine, Utente utente) {
 		super();

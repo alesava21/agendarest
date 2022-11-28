@@ -3,12 +3,16 @@ package it.prova.agenda.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.agenda.model.Agenda;
+import it.prova.agenda.model.Utente;
 import it.prova.agenda.repository.agenda.AgendaRepository;
 import it.prova.agenda.web.api.exception.AgendaNotFoundException;
+import it.prova.agenda.web.api.exception.PermisNegatedException;
+import it.prova.agenda.web.api.exception.UtenteNotLoggedException;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,6 +20,9 @@ public class AgendaServiceImpl implements AgendaService {
 
 	@Autowired
 	private AgendaRepository agendaRepository;
+
+	@Autowired
+	private UtenteService utenteService;
 
 	@Override
 	public List<Agenda> listAllElements(boolean eager) {
@@ -27,7 +34,21 @@ public class AgendaServiceImpl implements AgendaService {
 
 	@Override
 	public Agenda caricaSingoloElemento(Long id) {
-		return agendaRepository.findById(id).orElse(null);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteLoggato = utenteService.findByUsername(username);
+
+		Agenda result = agendaRepository.findById(id).orElse(null);
+
+		if (result == null) {
+			throw new AgendaNotFoundException("Agenda non trovata!");
+		}
+
+		if (utenteLoggato.getRuoli().stream().filter(r -> r.getCodice().equals("ROLE_ADMIN")).findAny()
+				.orElse(null) != null || utenteLoggato.getId() == result.getUtente().getId()) {
+			return result;
+		} else {
+			throw new PermisNegatedException("Non hai i permessi per visualizzare questo elemento!");
+		}
 
 	}
 
@@ -37,21 +58,50 @@ public class AgendaServiceImpl implements AgendaService {
 	}
 
 	@Transactional
-	public Agenda aggiorna(Agenda agendaInstance) {
-		return agendaRepository.save(agendaInstance);
+	public void aggiorna(Agenda agendaInstance) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteLoggato = utenteService.findByUsername(username);
+
+		if (utenteLoggato.getRuoli().stream().filter(r -> r.getCodice().equals("ROLE_ADMIN")).findAny()
+				.orElse(null) != null
+				|| (agendaInstance != null && utenteLoggato.getId() == agendaInstance.getUtente().getId())) {
+			agendaRepository.save(agendaInstance);
+		} else {
+			throw new PermisNegatedException("Non hai i permessi per modificare questo elemento!");
+		}
 	}
 
 	@Override
 	public Agenda inserisciNuovo(Agenda agendaInstance) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteLoggato = utenteService.findByUsername(username);
+
+		if (utenteLoggato == null) {
+			throw new UtenteNotLoggedException("Nessun utente loggato!");
+		}
+
+		agendaInstance.setUtente(utenteLoggato);
+
 		return agendaRepository.save(agendaInstance);
 	}
 
 	@Override
 	public void rimuovi(Long idToRemove) {
-		agendaRepository.findById(idToRemove)
-				.orElseThrow(() -> new AgendaNotFoundException("Film not found con id: " + idToRemove));
-		agendaRepository.deleteById(idToRemove);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente utenteLoggato = utenteService.findByUsername(username);
 
+		Agenda result = agendaRepository.findById(idToRemove).orElse(null);
+
+		if (result == null) {
+			throw new AgendaNotFoundException("Agenda non trovata!");
+		}
+
+		if (utenteLoggato.getRuoli().stream().filter(r -> r.getCodice().equals("ROLE_ADMIN")).findAny()
+				.orElse(null) != null || utenteLoggato.getId() == result.getUtente().getId()) {
+			agendaRepository.deleteById(idToRemove);
+		} else {
+			throw new PermisNegatedException("Non hai i permessi per rimuovere questo elemento!");
+		}
 	}
 
 	@Override

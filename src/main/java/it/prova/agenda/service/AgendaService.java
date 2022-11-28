@@ -12,7 +12,7 @@ public interface AgendaService {
 
 	Agenda caricaSingoloElementoEager(Long id);
 
-	Agenda aggiorna(Agenda agendaInstance);
+	public void aggiorna(Agenda agendaInstance);
 
 	Agenda inserisciNuovo(Agenda agendaInstance);
 

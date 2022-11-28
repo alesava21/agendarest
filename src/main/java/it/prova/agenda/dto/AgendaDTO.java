@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import it.prova.agenda.model.Agenda;
@@ -19,7 +19,6 @@ public class AgendaDTO {
 	private Long id;
 
 	@NotBlank(message = "{descrizione.notblank}")
-	@Size(min = 10, max = 100, message = "Il valore inserito '${validatedValue}' deve essere lungo tra {min} e {max} caratteri")
 	private String descrizione;
 
 	@NotNull(message = "{dataOraInizio.notnull}")
@@ -28,16 +27,21 @@ public class AgendaDTO {
 	@NotNull(message = "{dataOraFine.notnull}")
 	private LocalDateTime dataOraFine;
 
+	@JsonIgnoreProperties(value = { "utente" })
+	private UtenteDTO utenteDTO;
+
 	public AgendaDTO() {
-		super();
+
 	}
 
-	public AgendaDTO(Long id, String descrizione, LocalDateTime dataOraInizio, LocalDateTime dataOraFine) {
+	public AgendaDTO(Long id, String descrizione, LocalDateTime dataOraInizio, LocalDateTime dataOraFine,
+			UtenteDTO utenteDTO) {
 		super();
 		this.id = id;
 		this.descrizione = descrizione;
 		this.dataOraInizio = dataOraInizio;
 		this.dataOraFine = dataOraFine;
+		this.utenteDTO = utenteDTO;
 	}
 
 	public Long getId() {
@@ -72,29 +76,44 @@ public class AgendaDTO {
 		this.dataOraFine = dataOraFine;
 	}
 
+	public UtenteDTO getUtenteDTO() {
+		return utenteDTO;
+	}
+
+	public void setUtenteDTO(UtenteDTO utenteDTO) {
+		this.utenteDTO = utenteDTO;
+	}
+
 	public Agenda buildAgendaModel() {
 		Agenda result = new Agenda(this.id, this.descrizione, this.dataOraInizio, this.dataOraFine);
+
+		if (this.utenteDTO != null) {
+			result.setUtente(this.utenteDTO.buildUtenteModel(false));
+		}
 
 		return result;
 	}
 
 	public static AgendaDTO buildAgendaDTOFromModel(Agenda agendaModel) {
 		AgendaDTO result = new AgendaDTO(agendaModel.getId(), agendaModel.getDescrizione(),
-				agendaModel.getDataOraInizio(), agendaModel.getDataOraFine());
+				agendaModel.getDataOraInizio(), agendaModel.getDataOraFine(),
+				UtenteDTO.buildUtenteDTOFromModel(agendaModel.getUtente()));
 
 		return result;
 	}
 
-	public static List<AgendaDTO> createAgendaDTOListFromModelList(List<Agenda> modelListInput) {
-		return modelListInput.stream().map(agendaEntity -> {
-			return AgendaDTO.buildAgendaDTOFromModel(agendaEntity);
-		}).collect(Collectors.toList());
-	}
+	public static Set<AgendaDTO> createAgendaDTOSetFromModelSet(Set<Agenda> modelSetInput) {
 
-	public static Set<AgendaDTO> createAgendaDTOSetFromModelSet(Set<Agenda> modelListInput) {
-		return modelListInput.stream().map(agendaEntity -> {
+		return modelSetInput.stream().map(agendaEntity -> {
 			return AgendaDTO.buildAgendaDTOFromModel(agendaEntity);
 		}).collect(Collectors.toSet());
+	}
+
+	public static List<AgendaDTO> createAgendaDTOListFromModelList(List<Agenda> modelSetInput) {
+
+		return modelSetInput.stream().map(agendaEntity -> {
+			return AgendaDTO.buildAgendaDTOFromModel(agendaEntity);
+		}).collect(Collectors.toList());
 	}
 
 }

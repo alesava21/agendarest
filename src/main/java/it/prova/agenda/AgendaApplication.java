@@ -1,5 +1,6 @@
 package it.prova.agenda;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import it.prova.agenda.model.Agenda;
 import it.prova.agenda.model.Ruolo;
 import it.prova.agenda.model.Utente;
 import it.prova.agenda.service.AgendaService;
@@ -81,6 +83,14 @@ public class AgendaApplication  implements CommandLineRunner{
 			// l'inserimento avviene come created ma io voglio attivarlo
 			utenteServiceInstance.changeUserAbilitation(classicUser2.getId());
 		}
+		
+		Agenda agenda1 = new Agenda("descrizione", LocalDateTime.of(2022, 10, 11, 12, 30),
+				LocalDateTime.of(2022, 11, 1, 13, 0), utenteServiceInstance.listAllUtenti().get(0));
+		agendaService.inserisciNuovo(agenda1);
+		
+		Agenda agenda2 = new Agenda("descrizione", LocalDateTime.of(2022, 10, 11, 12, 30),
+				LocalDateTime.of(2022, 11, 1, 13, 0), utenteServiceInstance.listAllUtenti().get(1));
+		agendaService.inserisciNuovo(agenda2);
 		
 	}
 
