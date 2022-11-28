@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "agenda")
@@ -23,7 +24,7 @@ public class Agenda {
 
 	@Column(name = "descrizione")
 	private String descrizione;
-
+	
 	@Column(name = "dataOraInizio")
 	private LocalDateTime dataOraInizio;
 
