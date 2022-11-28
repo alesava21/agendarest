@@ -69,15 +69,6 @@ public class AgendaServiceImpl implements AgendaService {
 
 	@Override
 	public Agenda inserisciNuovo(Agenda agendaInstance) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		Utente utente = utenteService.findByUsername(username);
-
-		if (utente == null) {
-			throw new UtenteNotLoggedException("utente loggato");
-		}
-
-		agendaInstance.setUtente(utente);
-
 		return agendaRepository.save(agendaInstance);
 	}
 
