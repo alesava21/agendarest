@@ -55,11 +55,6 @@ public class AgendaServiceImpl implements AgendaService {
 	}
 
 	@Override
-	public List<Agenda> findByExample(Agenda example) {
-		return agendaRepository.findByExample(example);
-	}
-
-	@Override
 	public List<Agenda> findByDescrizione(String descrizione) {
 		return agendaRepository.findByDescrizione(descrizione);
 	}

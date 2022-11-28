@@ -12,13 +12,11 @@ public interface AgendaService {
 
 	Agenda caricaSingoloElementoEager(Long id);
 
-	public void aggiorna(Agenda agendaInstance);
+	Agenda aggiorna(Agenda agendaInstance);
 
 	Agenda inserisciNuovo(Agenda agendaInstance);
 
 	void rimuovi(Long idToRemove);
-
-	List<Agenda> findByExample(Agenda example);
 
 	List<Agenda> findByDescrizione(String descrizione);
 

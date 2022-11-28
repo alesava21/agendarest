@@ -36,7 +36,7 @@ public class AgendaController {
 
 	@GetMapping
 	public List<AgendaDTO> getAll() {
-		return AgendaDTO.createAgendaDTOListFromModelList(agendaService.listAllElements(true));
+		return AgendaDTO.createAgendaDTOListFromModelList(agendaService.listAllElements(false));
 	}
 
 	@GetMapping("/{id}")
