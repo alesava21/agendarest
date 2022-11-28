@@ -209,5 +209,13 @@ public class Utente {
 	public void setRuoli(Set<Ruolo> ruoli) {
 		this.ruoli = ruoli;
 	}
+	
+	public boolean isAttivo() {
+		return this.stato != null && this.stato.equals(StatoUtente.ATTIVO);
+	}
+
+	public boolean isDisabilitato() {
+		return this.stato != null && this.stato.equals(StatoUtente.DISABILITATO);
+	}
 
 }
