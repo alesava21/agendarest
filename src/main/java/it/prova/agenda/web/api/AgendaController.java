@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import it.prova.agenda.service.AgendaService;
 import it.prova.agenda.service.UtenteService;
 import it.prova.agenda.web.api.exception.AgendaNotFoundException;
 import it.prova.agenda.web.api.exception.IdNotNullForInsertException;
+import it.prova.agenda.web.api.exception.PermisNegatedException;
 
 @RestController
 @RequestMapping("api/agenda")
@@ -67,6 +69,12 @@ public class AgendaController {
 			throw new AgendaNotFoundException("Per poter modificare un'agenda devi specificarne l'id!");
 		
 		agendaService.aggiorna(agenda.buildAgendaModel());
+	}
+	
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void elimina(@PathVariable(name = "id", required = true) Long id) throws PermisNegatedException {
+		agendaService.rimuovi(id);
 	}
 
 }
