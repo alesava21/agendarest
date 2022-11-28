@@ -43,7 +43,7 @@ public class Utente {
 	@Enumerated(EnumType.STRING)
 	private StatoUtente stato;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "agenda")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "utente")
 	private Set<Agenda> agende = new HashSet<Agenda>(0);
 
 	@ManyToMany

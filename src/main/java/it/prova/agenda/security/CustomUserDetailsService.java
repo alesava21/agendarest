@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import it.prova.agenda.model.Utente;
 import it.prova.agenda.repository.utente.UtenteRepository;
 
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

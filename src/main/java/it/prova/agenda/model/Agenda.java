@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "agenda")
@@ -34,6 +33,8 @@ public class Agenda {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "utente_id", nullable = false)
 	private Utente utente;
+	
+	public Agenda() {}
 
 	public Agenda(Long id, String descrizione, LocalDateTime dataOraInizio, LocalDateTime dataOraFine, Utente utente) {
 		super();

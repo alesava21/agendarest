@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -18,6 +19,7 @@ public class AgendaDTO {
 	private Long id;
 
 	@NotBlank(message = "{descrizione.notblank}")
+	@Size(min = 10, max = 100, message = "Il valore inserito '${validatedValue}' deve essere lungo tra {min} e {max} caratteri")
 	private String descrizione;
 
 	@NotNull(message = "{dataOraInizio.notnull}")
@@ -27,18 +29,12 @@ public class AgendaDTO {
 	private LocalDateTime dataOraFine;
 
 	public AgendaDTO() {
+		super();
 	}
 
 	public AgendaDTO(Long id, String descrizione, LocalDateTime dataOraInizio, LocalDateTime dataOraFine) {
 		super();
 		this.id = id;
-		this.descrizione = descrizione;
-		this.dataOraInizio = dataOraInizio;
-		this.dataOraFine = dataOraFine;
-	}
-
-	public AgendaDTO(String descrizione, LocalDateTime dataOraInizio, LocalDateTime dataOraFine) {
-		super();
 		this.descrizione = descrizione;
 		this.dataOraInizio = dataOraInizio;
 		this.dataOraFine = dataOraFine;
@@ -78,12 +74,14 @@ public class AgendaDTO {
 
 	public Agenda buildAgendaModel() {
 		Agenda result = new Agenda(this.id, this.descrizione, this.dataOraInizio, this.dataOraFine);
+
 		return result;
 	}
 
 	public static AgendaDTO buildAgendaDTOFromModel(Agenda agendaModel) {
 		AgendaDTO result = new AgendaDTO(agendaModel.getId(), agendaModel.getDescrizione(),
 				agendaModel.getDataOraInizio(), agendaModel.getDataOraFine());
+
 		return result;
 	}
 
@@ -93,7 +91,7 @@ public class AgendaDTO {
 		}).collect(Collectors.toList());
 	}
 
-	public static Set<AgendaDTO> createFilmDTOSetFromModelSet(Set<Agenda> modelListInput) {
+	public static Set<AgendaDTO> createAgendaDTOSetFromModelSet(Set<Agenda> modelListInput) {
 		return modelListInput.stream().map(agendaEntity -> {
 			return AgendaDTO.buildAgendaDTOFromModel(agendaEntity);
 		}).collect(Collectors.toSet());
